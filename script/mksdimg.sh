@@ -31,14 +31,14 @@ get_board_type ${BOARD_TMP}
 
 echo "start compress the Big one of kernels..."
 
-lzma -c -9 -f -k ${PROJECT_PATH}/${IMAGE_NAME} > ${PREBUILT_PATH}/${BOARD_TYPE}/dtb/${BOARD_TMP}-${STORAGE_TYPE}/Image.lzma
+lzma -c -9 -f -k ${PROJECT_PATH}/${IMAGE_NAME} > ${PREBUILT_PATH}/${BOARD_TYPE}/dtb/Image.lzma
 
 if [ ! -d "${OUT_PATH}/${BOARD_TYPE}" ]; then
 	mkdir -p ${OUT_PATH}/${BOARD_TYPE}
 fi
 
-mkimage -f ${PREBUILT_PATH}/${BOARD_TYPE}/dtb/${BOARD_TMP}-${STORAGE_TYPE}/multi.its -r ${OUT_PATH}/${BOARD_TYPE}/boot.${STORAGE_TYPE}
+mkimage -f ${PREBUILT_PATH}/${BOARD_TYPE}/dtb/multi.its -r ${OUT_PATH}/${BOARD_TYPE}/boot.${STORAGE_TYPE}
 
-if [ -f "${PREBUILT_PATH}/${BOARD_TYPE}/dtb/${BOARD_TMP}-${STORAGE_TYPE}/Image.lzma" ]; then
-	rm -rf "${PREBUILT_PATH}/${BOARD_TYPE}/dtb/${BOARD_TMP}-${STORAGE_TYPE}/Image.lzma"
+if [ -f "${PREBUILT_PATH}/${BOARD_TYPE}/dtb/Image.lzma" ]; then
+	rm -rf "${PREBUILT_PATH}/${BOARD_TYPE}/dtb/Image.lzma"
 fi
