@@ -148,7 +148,7 @@ pushd $SOPHPI_PATH
 # # 打补丁
 fipv2_patch
 uboot_init_patch
-编译
+#编译
 for i in "${!ALLBOARD_SOPH[@]}"; do
     BOARD_SOPH=${ALLBOARD_SOPH[i]}
     BOARD_MILKV=${AllBOARD_MILKV[i]}    
