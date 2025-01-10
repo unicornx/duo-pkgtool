@@ -3,10 +3,14 @@
 PATH_DUO_SDK=/home/u/ws/duo/duo-buildroot-sdk
 PATH_DUO_PKGTOOL=/home/u/ws/duo/duo-pkgtool
 
+# Clone the duo-buildroot-sdk, see https://milkv.io/zh/docs/duo/getting-started/buildroot-sdk
+# git clone https://github.com/milkv-duo/duo-buildroot-sdk.git --depth=1
+#
 # $ cd $PATH_DUO_SDK
 #
-# # Checking out to the vesion we would like to ......
-# $ git checkout 8e970aa49 -b prebuilds # 8e970aa49 is the commit ID when I am testing
+# # Get the hash for the current commit in git ......
+# # In my test, it is 8e970aa49decfddc6f7f5bd66d0e798ffcf712c4
+# $ CURRENT_COMMIT_HASH=`git rev-parse --verify HEAD`
 #
 # # Applying patches for duo-sdk ......
 # $ git am $PATH_DUO_PKGTOOL/patches/0001-patchs-for-duo-pkgtool.patch
@@ -37,9 +41,10 @@ PATH_DUO_PKGTOOL=/home/u/ws/duo/duo-pkgtool
 
 # Copying prebuilds from duo-sdk to duo-pkgtool ......
 
-# common, but seems better move to separated folders, FIXME
+# common, cv181x/cc1800 are the same, do we need to cp to separated folders for each board type? FIXME
 cp $PATH_DUO_SDK/fsbl/plat/cv181x/fiptool.py $PATH_DUO_PKGTOOL/prebuilt/common/fiptool.py
 
+# FIXME: The operations are similar for all board type, maybe we can write it as a bash function
 # duo 256m sd
 cp $PATH_DUO_SDK/ramdisk/build/cv1812cp_milkv_duo256m_sd/workspace/cv1812cp_milkv_duo256m_sd.dtb $PATH_DUO_PKGTOOL/prebuilt/milkv-duo256m/dtb/cv1812cp_milkv_duo256m_sd.dtb
 cp $PATH_DUO_SDK/ramdisk/build/cv1812cp_milkv_duo256m_sd/workspace/multi.its $PATH_DUO_PKGTOOL/prebuilt/milkv-duo256m/dtb/multi.its
@@ -73,7 +78,7 @@ cp $PATH_DUO_SDK/fsbl/test/empty.bin $PATH_DUO_PKGTOOL/prebuilt/milkv-duos/fsbl/
 cp $PATH_DUO_SDK/opensbi/build/platform/generic/firmware/fw_dynamic.bin $PATH_DUO_PKGTOOL/prebuilt/milkv-duos/opensbi/fw_dynamic.bin
 cp $PATH_DUO_SDK/u-boot-2021.10/build/cv1813h_milkv_duos_sd/u-boot-raw.bin $PATH_DUO_PKGTOOL/prebuilt/milkv-duos/uboot/u-boot-raw.bin
 
-# Recording the commit ID of duo-sdk we make the prebuilds
+# Recording the $CURRENT_COMMIT_HASH ......
 # ......
 
 # Do some cleanup ......
