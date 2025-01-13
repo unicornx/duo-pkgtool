@@ -1,41 +1,57 @@
-# duo-pkgtool
-A simple pkg tool for duo to pack RT-Thread.                 
+# rttpkgtool
 
-## 1. 准备工作
-- 首先需要拉取 `duo-pkgtool` 工具到本地目录。示例如下：
-	``` shell 
-	$ git clone git@github.com:koikky/duo-pkgtool.git 
-	```
-                   
-- 同时，在使用之前，我们需要安装一些额外的外部依赖，示例如下:                           	
-	``` shell
-	$ sudo apt update
-	$ sudo apt install u-boot-tools
-	```
+A simple package tool to pack RT-Thread kenrel into bootable images for duo family.
 
-## 2. 开始使用
-### 2.1. 设置环境
-- 每次使用前，需要加载 `script/` 目录下的 `tool.sh`。示例如下：                                    
-	``` shell
-	$ cd duo-pkgtool
-	$ source script/tool.sh 
-	```  
-                                                
-- 同时，用户可以在终端里输入 `print_usage` 命令获取使用提示。示例如下：                                      
-	``` shell 
-	$ print_usage
-	```                        
 
-### 2.2. 打包
-- 当成功运行 `tool.sh` 后，可以使用如下命令进行打包，打包结果为镜像文件。                                   
-  	其中，命令的格式为：```mkpkg DPT_PATH_KERNEL={kernel} [DPT_BOARD_TYPE={type}] [DPT_PATH_OUTPUT={output}] [-l/-a]```，示例如下：                                              
-	``` shell
-	$ mkpkg DPT_PATH_KERNEL=/home/{username}/rt-thread DPT_BOARD_TYPE=duo256m -a 
-	```                             
-	- 携带的参数没有顺序之分。                                                                                                              
-	- 参数中含有 `[]` 的项是可以省略的，只有选项 `DPT_PATH_KERNEL` 是不能省略的，打包时需要指定。                                                                
-	- 被省略的项采用默认值：                                                                           
-		（1）选项 `DPT_BOARD_TYPE` 的默认采用 `duo256m`。                                         
-		（2）选项 `DPT_PATH_OUTPUT` 的默认采用目录 `duo-pkgtool/output`。                                                 
-		（3）默认只对大核进行打包，若用户有其他选择可添加选项 `-l` 或 `-a`， `-l` 表示只对小核进行打包，`-a` 表示对全部进行打包。                                                                                                                                                                                                       
-	
+# 操作步骤
+
+## 安装一些额外的外部依赖
+
+``` shell
+$ sudo apt update
+$ sudo apt install u-boot-tools xz-utils
+```
+
+其中 u-boot-tools 包含了我们需要的 mkimage
+
+## 拉取 `rttpkgtool` 工具到本地
+
+``` shell 
+$ git clone git@github.com:unicornx/rttpkgtool.git
+```
+
+进入 rttpkgtool 目录，后面的操作都在该目录下进行
+
+```shell
+$ cd rttpkgtool                   
+```
+
+## 执行打包
+
+命令的格式为:
+
+`DPT_PATH_KERNEL=<path_kernel> [DPT_BOARD_TYPE=<board_type>] [DPT_PATH_OUTPUT=<path_output>] ./mkpkg.sh  [-h/-l/-b/-a]`                                              
+
+- 含有 `[]` 的项是可以省略的 
+- 环境变量 `DPT_PATH_KERNEL`(必选): rt-thread 仓库的绝对路径（路径名包括 `rt-thread`），通过该路径，package tool 才可以找到 RT-Thread 的 kernel image，即 rtthread.bin
+- 环境变量 `DPT_BOARD_TYPE`（可选）: 开发板的类型，目前支持 duo，duo256m, duos 三种开发板类型。不指定该选项，默认采用 `duo256m`。
+- 环境变量 `DPT_PATH_OUTPUT`（可选）: 输出的绝对路径。各个板子的输出再按照子目录存放在 `DPT_PATH_OUTPUT` 下。不指定该选项，默认输出在 `rttpkgtool/output` 下。
+- 命令行选项 `-h`/`-l`/`-b`/`-a`: 
+  - `-h`: 打印帮助信息后直接退出
+  - `-l`：只对小核进行打包，即只生成 `fip.bin`
+  - `-b`：只对大核进行打包，即只生成 `boot.sd`
+  - `-a`：对大核和小核都进行打包，即同时生成 `fip.bin` 和 `boot.sd`。
+  如果出现多个命令行选项，优先级 `-h` > `-a` > `-b` > `-l`。如果不指定命令行选项，则等同于 `-a`。
+
+示例如下:
+
+``` shell
+$ DPT_PATH_KERNEL=/home/u/rt-thread DPT_BOARD_TYPE=duo256m DPT_PATH_OUTPUT=/home/u/rttokgtool/output ./mkpkg.sh -a
+```
+
+或者
+
+``` shell
+$ DPT_PATH_KERNEL=/home/u/rt-thread ./mkpkg.sh
+```
+
