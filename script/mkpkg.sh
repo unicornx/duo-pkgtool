@@ -1,4 +1,5 @@
 #!/bin/bash
+# This tool is used to package the kernel, bootloader and etc. into the image file.
 
 #set -v
 
@@ -15,8 +16,6 @@ function usage() {
 }
 
 function package_little() {
-	echo "package_little ......"
-
 	local PATH_KERNEL="${DPT_PATH_KERNEL}/bsp/cvitek/c906_little/rtthread.bin"
 
 	if [[ ! -f "${PATH_KERNEL}" ]]; then
@@ -39,7 +38,6 @@ function package_little() {
 		chmod +x "${PATH_PREBUILT_COMMON}/fiptool.py"
 	fi
 
-	echo "Combining fip.bin..."
 	. ${PATH_PREBUILT_FSBL}/blmacros.env && \
 	${PATH_PREBUILT_COMMON}/fiptool.py -v genfip \
 	${DPT_PATH_OUTPUT}/${DPT_BOARD_TYPE}/fip.bin \
@@ -60,8 +58,6 @@ function package_little() {
 }
 
 function package_big() {
-	echo "package_big ......"
-
 	if [ ! command -v mkimage &> /dev/null ]; then
 		echo "ERROR: mkimage is missing. Run 'apt install u-boot-tools' to install it." 
 		exit 1
@@ -95,8 +91,6 @@ function package_big() {
 }
 
 function package_all() {
-	echo "package_all ......"
-
 	package_little
 	package_big
 }

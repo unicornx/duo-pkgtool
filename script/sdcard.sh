@@ -1,9 +1,10 @@
 #!/bin/bash
+# This tool is used to copy the image files to the SD card.
 
 function usage() {
         echo "Usage:"
         echo "  [DEV=<path_dev>] ./sdcard.sh [-h] [board_type] [path_src] [path_dest]"
-        echo "  - path_dev: '/dev/sdb1' if not provided"
+        echo "  - DEV: env variable, default as '/dev/sdb1' if not provided"
         echo "  - -h: display usage"
         echo "  - board_type: 'duo256m' if not provided"
         echo "  - path_src: <rttpkgtool>/output if not provided"
