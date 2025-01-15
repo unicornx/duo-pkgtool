@@ -13,6 +13,8 @@ function usage() {
 
 DPT_PATH=$(realpath $(dirname $0)/..)
 
+source ${DPT_PATH}/script/board_types.sh
+
 if [ "$1" = "-h" ]; then
 	usage
         exit 0
@@ -27,6 +29,13 @@ PATH_DEST=$3
 
 if [ -z "${BOARD_TYPE}" ]; then
 	BOARD_TYPE="duo256m"
+fi
+check_board_type $BOARD_TYPE
+if [ $? -ne 0 ]; then
+	echo "ERROR: The board type you inputted is invalid. Please try again!"
+	print_supported_board_types
+	usage
+	exit 1
 fi
 
 if [ -z "${PATH_SRC}" ]; then

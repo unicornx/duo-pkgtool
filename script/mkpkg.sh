@@ -4,7 +4,8 @@
 #set -v
 
 DPT_PATH=$(realpath $(dirname $0)/..)
-echo "DPT_PATH: ${DPT_PATH}"
+
+source ${DPT_PATH}/script/board_types.sh	
 
 function usage() {
         echo "Usage:"
@@ -12,7 +13,7 @@ function usage() {
         echo "  -h: display usage"
         echo "  -l: make little"
         echo "  -b: make big"
-        echo "  -a: make all(both big and little)"
+        echo "  -a: make all (both big and little)"
 }
 
 function package_little() {
@@ -38,7 +39,7 @@ function package_little() {
 		chmod +x "${PATH_PREBUILT_COMMON}/fiptool.py"
 	fi
 
-	. ${PATH_PREBUILT_FSBL}/blmacros.env && \
+	source ${PATH_PREBUILT_FSBL}/blmacros.env && \
 	${PATH_PREBUILT_COMMON}/fiptool.py -v genfip \
 	${DPT_PATH_OUTPUT}/${DPT_BOARD_TYPE}/fip.bin \
 	--MONITOR_RUNADDR="${MONITOR_RUNADDR}" \
@@ -95,7 +96,6 @@ function package_all() {
 	package_big
 }
 
-
 while getopts ":habl" opt
 do
         case $opt in
@@ -138,6 +138,14 @@ fi
 
 if [ -z "$DPT_BOARD_TYPE" ]; then
 	DPT_BOARD_TYPE="duo256m"
+fi
+
+check_board_type $DPT_BOARD_TYPE
+if [ $? -ne 0 ]; then
+	echo "ERROR: The board type you inputted is invalid. Please try again!"
+	print_supported_board_types
+	usage
+	exit 1
 fi
 
 if [ -z "$DPT_PATH_OUTPUT" ]; then
